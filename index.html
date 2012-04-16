@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="cs" />
+    <meta name="author" lang="cs" content="hisasann; http://hisasann.com/housetect/" />
+    <meta name="copyright" lang="cs" content="hisasann; http://hisasann.com/housetect/" />
+    <meta name="description" content="jStack.js - jQuery Plugin" />
+    <meta name="keywords" content="javascript,javascripter,java,actionscript,flash,art" />
+    <meta name="robots" content="all,follow" />
+    <link href="css/screen.css" type="text/css" rel="stylesheet" media="screen,projection" />
+	<style type="text/css" media="screen">
+		.jStack {
+			margin-bottom: 20px;
+		}
+		
+		#imageWraper1 {
+			margin: 0px auto;
+			width: 700px;
+			height: 450px;
+			border: 1px dashed;
+		}
+		
+		#stackTrace {
+			
+		}
+
+		#imageBox {
+			margin: 10px auto;
+			width: 450px;
+		}
+
+		#imageBox a{
+			outline: none;
+			display: none;
+		}
+
+		#imageBox img{
+		}
+
+		.jStackBtn {
+			text-align: center;
+		}
+	</style>
+
+    <title>jStack.js - jQuery Plugin</title>
+  </head>
+  <body>
+    <div id="layout">
+      
+      <div id="header">
+        
+        <h1 id="logo"><a href="index.html">jStack<span>.js</span></a></h1>
+        <hr class="noscreen" />   
+          
+        <div id="navigation">
+	        <ul>
+	          <li><a href="http://hisasann.com/" title="HOME">HOME</a></li>
+	          <li><a href="#documentation" title="DOCUMENTATION">DOCUMENTATION</a></li>
+	          <li><a href="#download" title="DOWNLOAD">DOWNLOAD</a></li>
+	        </ul>
+        </div>
+        <hr class="noscreen" />  
+      </div>
+      
+        <div id="main">
+        
+        <h2 id="products">Example</h2>
+		<div class="jStack">
+			<div id="imageWraper1">
+				<div id="imageBox">
+					<a href="http://hisasann.com/"><img src="img/img1.png"></a>
+					<a href="#"><img src="img/img2.png"></a>
+					<a href="#"><img src="img/img3.png"></a>
+					<a href="#"><img src="img/img4.png"></a>
+					<a href="#"><img src="img/img5.png"></a>
+					<a href="#"><img src="img/img6.png"></a>
+					<a href="#"><img src="img/img7.png"></a>
+					<a href="#"><img src="img/img8.png"></a>
+					<a href="#"><img src="img/img9.png"></a>
+					<a href="#"><img src="img/img10.png"></a>
+				</div>
+			</div>
+			<br>
+			<div class="jStackBtn">
+				<input type="button" id="prev" value="&lt;" />
+				<input type="button" id="next" value="&gt;" />
+				<input type="button" id="shuffle" value="shuffle" />
+			</div>
+		</div>
+
+        <h2 id="documentation">Documentation</h2>
+		jStack.jsは画像をペラペラめくっていくjQuery Pluginです。<br>
+		目玉商品はシャッフル機能です。
+
+		<h3>サンプルコード</h3>
+		<h4>JavaScript</h4>
+		以下のサンプルではimageBoxというidを持つ要素の子にimgタグが複数並んでいることを想定しています。<br>
+		まずはjStack関数を呼び出して<strong>初期化</strong>してください。<br>
+		引数を何も渡さなければデフォルト値で動作します。<br>
+		またパラメータ名で<strong>Out</strong>、<strong>In</strong>というサフィックスが付いているものは、Outが画像が横に呼び出たとき、Inが画像が元の場所に戻るときを意味します。<br>
+		なので画像が横にいくときはゆっくりにして、戻るときに速くするなど<strong>アレンジしたMotion</strong>が可能になります。<br>
+		<textarea class="js" name="code">
+			$("#imageBox").jStack({
+				isClick: true,
+				isRandom: true,
+				durationOut: 400,
+				durationIn: 300,
+				easingOut: "easeInOutBack",
+				easingIn: "easeOutBounce",
+				moveLeft: 250,
+				moveTop: 150,
+				opacityOut: 0.6,
+				opacityIn: 1,
+				delay: 10,
+				direction: "next",
+				callback: function() {}
+			});
+		</textarea><br>
+		isClickをtrueにしている場合は画像を直接クリックしてめくることができますが、画像をリンクにしていた場合はめくるよりも遷移して欲しいところです。<br>
+		そうゆう場合はisClickをfalseにし、他にめるく用のボタンを用意して以下のようにイベントセットしてください。<br>
+		<textarea class="js" name="code">
+			$("#next").click(function() {
+				$.jStack.next();
+			});
+
+			$("#prev").click(function() {
+				$.jStack.prev();
+			});
+		</textarea><br>
+		また今回作ってみたかった<strong>シャッフル機能</strong>はトランプのように並びをランダムにする関数になります。<br>
+		<textarea class="js" name="code">
+			$("#shuffle").click(function() {
+				$.jStack.shuffle();
+			});
+		</textarea>
+		
+		<h4>HTML</h4>
+		<textarea name="code" class="html">
+			&lt;div id="imageBox"&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img1.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img2.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img3.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img4.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img5.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img6.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img7.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img8.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img9.png"&gt;&lt;/a&gt;
+				&lt;a href="#"&gt;&lt;img src="img/img10.png"&gt;&lt;/a&gt;
+			&lt;/div&gt;
+		</textarea>
+		
+        <h2 id="download">Download</h2>
+		<ul>
+			<li>
+				<a href="http://gist.github.com/111767" target="_blank">gist: 111767 - GitHub</a>
+			</li>
+		</ul>
+
+        <!-- <table>
+          <tr class="table-top">
+            <td>Sample table</td>
+            <td>Sample table</td>
+            <td>Sample table</td>
+            <td>Sample table</td>
+          </tr>
+          <tr>
+            <td>Lorem ipsum</td>
+            <td>Lorem ipsum</td>
+            <td>Lorem ipsum</td>
+            <td>Lorem ipsum</td>
+          </tr>
+          </table> -->
+          
+        </div>
+        </div>
+        <div id="footer">
+        <div id="footer-inside">
+        <p id="copyright">&copy; 2008 - <a href="http://hisasann.com/">hisasann</a></p>
+        
+        <!-- Please don't delete this. You can use this template for free and this is the only way that you can say thanks to me -->
+          <p id="dont-delete-this">Design by <a href="http://www.davidkohout.cz">David Kohout</a> | Our tip: <a href="http://www.goodmood.cz" title="Absinthe, Becherovka, Slivovitz store">Absinthe Store</a></p>
+        <!-- Thank you :) -->
+        
+        </div><div style="clear: both;"></div></div>
+		<script src="js/jquery-1.3.2.js"></script>
+		<script src="js/jquery.easing.1.3.js"></script>
+		<script src="js/jStack.js"></script>
+		<!-- syntax -->
+		<link rel="stylesheet" href="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Styles/SyntaxHighlighter.css" type="text/css" />  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shCore.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushXml.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushCss.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushPhp.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushJScript.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushCss.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushJava.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushRuby.js"></script>  
+		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/webscript.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			$(function() {
+				dp.SyntaxHighlighter.ClipboardSwf = 'http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/clipboard.swf';
+				dp.SyntaxHighlighter.HighlightAll('code');
+
+				// fadeInOut
+				$("#logo").fadeOut().fadeIn();
+
+				// smooth scroller
+				$("a[href^=#]").click(function() {
+					var hash = this.hash;
+					if(!hash || hash == "#")
+						return false;
+					$($.browser.safari ? 'body' : 'html')
+						.animate({scrollTop: $(hash).offset().top}, 1500, "easeInOutBounce");
+					return false;
+				});
+				
+				// jStack
+				$("#imageBox").jStack({
+					isClick: true,
+					isRandom: true,
+					durationOut: 400,
+					durationIn: 300,
+					easingOut: "easeInOutBack",
+					easingIn: "easeOutBounce",
+					moveLeft: 250,
+					moveTop: 150,
+					opacityOut: 0.6,
+					opacityIn: 1,
+					delay: 10,
+					direction: "next",
+					callback: function() {}
+				});
+				$("#next").click(function() {
+					$.jStack.next();
+				});
+
+				$("#prev").click(function() {
+					$.jStack.prev();
+				});
+				
+				$("#shuffle").click(function() {
+					$.jStack.shuffle();
+				});
+			});
+		</script>
+  </body>
+</html>
