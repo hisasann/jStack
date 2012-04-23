@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css" media="screen">
+		/* clearfix */
+		.clearfix:after {
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+		}
+		.clearfix {
+		display: inline-block;
+		}
+		/* Hides from IE-mac \*/
+		* html .clearfix {height: 1%;}
+		.clearfix {display: block;}
+		/* End hide from IE-mac */
+		
+		body {
+			overflow: hidden;
+		}
+
+		.jStack {
+			margin-bottom: 20px;
+		}
+
+		.imageWraper {
+			width: 450px;
+			border: 1px dashed;
+			float: left;
+			margin-right: 10px;
+		}
+
+		.imageBox {
+			margin: 10px auto;
+			width: 450px;
+			height: 450px;
+		}
+
+		.imageBox a {
+			text-decoration: none;
+			outline: none;
+			display: none;
+		}
+		
+		.imageBox img {
+			border: 0px;
+/*			-moz-transform: rotate(-3deg);
+			-webkit-transform: rotate(-3deg);
+			transform: rotate(-3deg);
+*/		}
+
+		.jStackBtn {
+			text-align: center;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="js/jStack.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		$(function() {
+		});
+		
+		var options = {
+			isClickAnimation: true,
+			isPositionRandom: true,
+			durationOut: 300,
+			durationIn: 200,
+			easingOut: "easeInOutBack",
+			easingIn: "easeOutBounce",
+			moveLeft: 250,
+			moveTop: 150,
+			opacityOut: 0.6,
+			opacityIn: 1,
+			delay: 10,
+			direction: "next",
+			callback: function() {}
+		};
+		
+		$(window).bind("load", function() {
+			// jStack
+			var jstack1 = $("#image1").jStack(options);
+			$("#next1").click(function() {
+				jstack1.next();
+			});
+			$("#prev1").click(function() {
+				jstack1.prev();
+			});
+			$("#shuffle1").click(function() {
+				jstack1.shuffle();
+			});
+
+			// jStack
+			var jstack2 = $("#image2").jStack(options);
+			$("#next2").click(function() {
+				jstack2.next();
+			});
+			$("#prev2").click(function() {
+				jstack2.prev();
+			});
+			$("#shuffle2").click(function() {
+				jstack2.shuffle();
+			});
+		});
+	</script>
+</head>
+<body>
+	
+	<div class="jStack">
+		<div class="imageWraper">
+			<div id="image1" class="imageBox clearfix">
+				<a href="#"><img src="img/png-1.png"></a>
+				<a href="#"><img src="img/png-2.png"></a>
+				<a href="#"><img src="img/png-3.png"></a>
+				<a href="#"><img src="img/png-4.png"></a>
+				<a href="#"><img src="img/png-5.png"></a>
+				<a href="#"><img src="img/png-6.png"></a>
+				<a href="#"><img src="img/png-7.png"></a>
+				<a href="#"><img src="img/png-8.png"></a>
+			</div>
+			<div class="jStackBtn">
+				<input type="button" id="prev1" value="&lt;" />
+				<input type="button" id="next1" value="&gt;" />
+				<input type="button" id="shuffle1" value="shuffle" />
+			</div>
+		</div>
+
+		<div class="imageWraper">
+			<div id="image2" class="imageBox clearfix">
+				<a href="#"><img src="img/png-4.png"></a>
+				<a href="#"><img src="img/png-8.png"></a>
+				<a href="#"><img src="img/png-2.png"></a>
+				<a href="#"><img src="img/png-6.png"></a>
+				<a href="#"><img src="img/png-1.png"></a>
+				<a href="#"><img src="img/png-3.png"></a>
+				<a href="#"><img src="img/png-7.png"></a>
+				<a href="#"><img src="img/png-5.png"></a>
+			</div>
+			<div class="jStackBtn">
+				<input type="button" id="prev2" value="&lt;" />
+				<input type="button" id="next2" value="&gt;" />
+				<input type="button" id="shuffle2" value="shuffle" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>
