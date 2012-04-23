@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+<!DOCTYPE HTML>
+<html lang="en-US">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="content-language" content="cs" />
@@ -101,11 +101,11 @@
 		またパラメータ名で<strong>Out</strong>、<strong>In</strong>というサフィックスが付いているものは、Outが画像が横に呼び出たとき、Inが画像が元の場所に戻るときを意味します。<br>
 		なので画像が横にいくときはゆっくりにして、戻るときに速くするなど<strong>アレンジしたMotion</strong>が可能になります。<br>
 		<textarea class="js" name="code">
-			$("#imageBox").jStack({
-				isClick: true,
-				isRandom: true,
-				durationOut: 400,
-				durationIn: 300,
+			var jstack = $("#imageBox").jStack({
+				isClickAnimation: true,
+				isPositionRandom: true,
+				durationOut: 300,
+				durationIn: 200,
 				easingOut: "easeInOutBack",
 				easingIn: "easeOutBounce",
 				moveLeft: 250,
@@ -117,21 +117,21 @@
 				callback: function() {}
 			});
 		</textarea><br>
-		isClickをtrueにしている場合は画像を直接クリックしてめくることができますが、画像をリンクにしていた場合はめくるよりも遷移して欲しいところです。<br>
+		isClickAnimationをtrueにしている場合は画像を直接クリックしてめくることができますが、画像をリンクにしていた場合はめくるよりも遷移して欲しいところです。<br>
 		そうゆう場合はisClickをfalseにし、他にめるく用のボタンを用意して以下のようにイベントセットしてください。<br>
 		<textarea class="js" name="code">
 			$("#next").click(function() {
-				$.jStack.next();
+				jstack.next();
 			});
 
 			$("#prev").click(function() {
-				$.jStack.prev();
+				jstack.prev();
 			});
 		</textarea><br>
 		また今回作ってみたかった<strong>シャッフル機能</strong>はトランプのように並びをランダムにする関数になります。<br>
 		<textarea class="js" name="code">
 			$("#shuffle").click(function() {
-				$.jStack.shuffle();
+				jstack.shuffle();
 			});
 		</textarea>
 		
@@ -154,7 +154,7 @@
         <h2 id="download">Download</h2>
 		<ul>
 			<li>
-				<a href="http://gist.github.com/111767" target="_blank">gist: 111767 - GitHub</a>
+				<a href="https://github.com/hisasann/jStack" target="_blank">hisasann/jStack</a>
 			</li>
 		</ul>
 
@@ -184,7 +184,7 @@
         <!-- Thank you :) -->
         
         </div><div style="clear: both;"></div></div>
-		<script src="js/jquery-1.3.2.js"></script>
+		<script src="js/jquery.js"></script>
 		<script src="js/jquery.easing.1.3.js"></script>
 		<script src="js/jStack.js"></script>
 		<!-- syntax -->
@@ -197,7 +197,6 @@
 		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushCss.js"></script>  
 		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushJava.js"></script>  
 		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/shBrushRuby.js"></script>  
-		<script type="text/javascript" src="http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/webscript.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			$(function() {
 				dp.SyntaxHighlighter.ClipboardSwf = 'http://hisasann.com/housetect/js/dp.SyntaxHighlighter/Scripts/clipboard.swf';
@@ -215,35 +214,38 @@
 						.animate({scrollTop: $(hash).offset().top}, 1500, "easeInOutBounce");
 					return false;
 				});
-				
+			});
+			
+			var options = {
+				isClickAnimation: true,
+				isPositionRandom: true,
+				durationOut: 300,
+				durationIn: 200,
+				easingOut: "easeInOutBack",
+				easingIn: "easeOutBounce",
+				moveLeft: 250,
+				moveTop: 150,
+				opacityOut: 0.6,
+				opacityIn: 1,
+				delay: 10,
+				direction: "next",
+				callback: function() {}
+			};
+			
+			$(window).bind("load", function() {
 				// jStack
-				$("#imageBox").jStack({
-					isClick: true,
-					isRandom: true,
-					durationOut: 400,
-					durationIn: 300,
-					easingOut: "easeInOutBack",
-					easingIn: "easeOutBounce",
-					moveLeft: 250,
-					moveTop: 150,
-					opacityOut: 0.6,
-					opacityIn: 1,
-					delay: 10,
-					direction: "next",
-					callback: function() {}
-				});
+				var jstack = $("#imageBox").jStack(options);
 				$("#next").click(function() {
-					$.jStack.next();
+					jstack.next();
 				});
-
 				$("#prev").click(function() {
-					$.jStack.prev();
+					jstack.prev();
 				});
-				
 				$("#shuffle").click(function() {
-					$.jStack.shuffle();
+					jstack.shuffle();
 				});
 			});
+
 		</script>
   </body>
 </html>

@@ -1,18 +1,61 @@
 (function($) {
 /*
- * jStack jQuery Plugin version 1.0
+ * jStack jQuery Plugin version 1.1
  * http://lab.hisasann.com/jStack/
  *
- * Copyright (c) 2009 hisasann http://hisasann.com/
+ * Copyright (c) 2012 hisasann http://hisasann.com/
  * Dual licensed under the MIT and GPL licenses.
  */
 
-var maxIndex = 10000,
-	stack,
-	targetId,
-	options = {
-		isClick: true,
-		isRandom: true,
+$.fn.jStack = function(opts) {
+	return new jStack(this, opts);
+};
+
+var jStack = function(element, opts){
+	var that = this,
+		options = this.options;
+	
+	$.extend(options, opts);
+
+	$(element).css('position', 'relative')
+
+	this.stack = $.makeArray($(element).children());
+
+	$(element).children()
+		.each(function(index) {
+			var plusminus = "+";
+			if (index % 2 == 0) {
+				plusminus = "-";
+			}
+			
+			var deg = Math.random() * 4;
+			var rotate = 'rotate(' + plusminus + deg + 'deg)';
+			
+			$(this)
+				.css({
+					position: "absolute",
+					top: (options.isPositionRandom ? getRandom(options.deviate) : 0) + "px",
+					left: (options.isPositionRandom ? getRandom(options.deviate) : 0) + "px",
+					zIndex: that.maxIndex - index,
+					display: "block",
+					"transform": rotate,
+					"-webkit-transform": rotate,
+					"-moz-transform": rotate
+				});
+		});
+
+	if(options.isClickAnimation) {
+		$(this.stack[0]).on("click", this, mover);
+	}
+}
+
+jStack.prototype = {
+	maxIndex: 10000,
+	stack: [],
+	options: {
+		deviate: 40,
+		isClickAnimation: true,
+		isPositionRandom: true,
 		durationOut: 500,
 		durationIn: 500,
 		easingOut: "swing",
@@ -24,66 +67,44 @@ var maxIndex = 10000,
 		delay: 100,
 		direction: "next",
 		callback: function() {}
-	};
+	},
+	next: function() {
+		swap.call(this, "next");
+		return false;
+	},
+	prev: function() {
+		swap.call(this, "prev");
+		return false;
+	},
+	shuffle: function() {
+		swap.call(this, "shuffle");
+		return false;
+	}
+}
 
-$.fn.jStack = function(opts) {
-	$.extend(options, opts);
-
-	$(this).css('position', 'relative')
-
-	stack = $.makeArray($(this).children());
-
-	$(this).children()
-		.each(function(index) {
-			$(this)
-				.css({
-					position: "absolute",
-					top: (options.isRandom ? getRandom(30) : 0) + "px",
-					left: (options.isRandom ? getRandom(30) : 0) + "px",
-					zIndex: maxIndex - index,
-					display: "block"
-				});
-			if(options.isClick)
-				$(stack[0]).bind("click", mover);
-		});
-	return stack;
-};
-
-$.jStack = function() {};
-$.jStack.next = function() {
-	swap("next");
-	return false;
-};
-
-$.jStack.prev = function() {
-	swap("prev");
-	return false;
-};
-
-$.jStack.shuffle = function() {
-	swap("shuffle");
-	return false;
-};
-
-function mover() {
-	swap(options.direction);
+function mover(event) {
+	var data = event.data
+	swap.call(data, data.options.direction);
 	return false;
 }
 
 function swap(direction) {
-	var current = stack[0],
+	var stack = this.stack,
+		current = stack[0],
 		next = stack[1],
-		isShuffle = direction == "shuffle" ? true : false;
+		isShuffle = direction == "shuffle" ? true : false,
+		that = this,
+		options = this.options;
 
 	switch(direction) {
 		case "prev":
-			$(current).unbind("click", mover);
+			$(current).off("click", mover);
 			current = stack.pop();
 			stack = arrayExtend([current], stack);
 			next = stack[0];
 			break;
 		case "shuffle":
-			$(current).unbind("click", mover);
+			$(current).off("click", mover);
 			stack = arrayShuffle(stack);
 			current = stack;
 			next = stack[0];
@@ -92,45 +113,17 @@ function swap(direction) {
 		default:
 			stack.shift();
 			stack.push(current);
-			$(current).unbind("click", mover);
+			$(current).off("click", mover);
 			break;
 	}
+	this.stack = stack;
 	
-	if(options.isClick)
-		$(next).bind("click", mover);
+	if(options.isClickAnimation) {
+		$(next).on("click", this, mover);
+	}
 
 	if(isShuffle) {
-		var i = $(current).length;
-		(function() {
-			var _this = $(current)[--i];
-			if(i < 0) {
-				jQuery.each(stack, function(index) {
-					$(this).css("zIndex", maxIndex - index);
-				});
-				return;
-			}
-
-			var argCallee = arguments.callee;
-			$(_this).animate({
-					left: Math.sin(i) * options.moveLeft + "px",
-					top: Math.cos(i) * options.moveTop + "px",
-					opacity: options.opacityOut
-				}, options.durationOut, options.easingOut, function() {
-					var $this = $(this);
-					setTimeout(function() {
-						$this.animate({
-							left: (options.isRandom ? getRandom(30) : 0) + "px",
-							top: (options.isRandom ? getRandom(30) : 0) + "px",
-							opacity: options.opacityIn
-						}, options.durationIn, options.easingIn, function() {
-							options.callback.call(this);
-						});
-					}, options.delay);
-			});
-			setTimeout(function() {
-				argCallee();
-			}, getRandom(13 * i));
-		})();
+		shuffleAnimation.apply(this, [current, stack, $(current).length]);
 	} else {
 		$(current)
 			.animate({
@@ -139,7 +132,7 @@ function swap(direction) {
 					opacity: options.opacityOut
 				}, options.durationOut, options.easingOut, function() {
 					jQuery.each(stack, function(index) {
-						$(this).css("zIndex", maxIndex - index);
+						$(this).css("zIndex", that.maxIndex - index);
 					});
 
 					var $this = $(this);
@@ -154,6 +147,40 @@ function swap(direction) {
 					}, options.delay);
 			});
 	}
+}
+
+function shuffleAnimation(current, stack, length) {
+	var _this = $(current)[--length],
+		that = this,
+		options = this.options;
+
+	if(length < 0) {
+		jQuery.each(stack, function(index) {
+			$(this).css("zIndex", that.maxIndex - index);
+		});
+		return;
+	}
+
+	$(_this).animate({
+			left: Math.sin(length) * options.moveLeft + "px",
+			top: Math.cos(length) * options.moveTop + "px",
+			opacity: options.opacityOut
+		}, options.durationOut, options.easingOut, function() {
+			var $this = $(this);
+
+			setTimeout(function() {
+				$this.animate({
+					left: (options.isPositionRandom ? getRandom(options.deviate) : 0) + "px",
+					top: (options.isPositionRandom ? getRandom(options.deviate) : 0) + "px",
+					opacity: options.opacityIn
+				}, options.durationIn, options.easingIn, function() {
+					options.callback.call(this);
+				});
+			}, options.delay);
+	});
+	setTimeout(function() {
+		shuffleAnimation.apply(that, [current, stack, length]);
+	}, getRandom(13 * length));
 }
 
 function arrayExtend() {
